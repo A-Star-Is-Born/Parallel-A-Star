@@ -1,8 +1,9 @@
 package main.astar;
-
-import main.Parallel_AStar;
+import main.maze.Maze;
 import main.maze.Node;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.PriorityQueue;
 
 public class AStar {
@@ -11,7 +12,11 @@ public class AStar {
      * Given a maze, applies a heuristic in order to navigate through that maze
      * and report statistics on that navigation.
      */
-    public Node run(Node start, Node target){
+    public Node run(Maze maze){
+        // TODO
+        Node start = maze.getStart();
+        Node target = maze.getTarget();
+
         PriorityQueue<Node> visited = new PriorityQueue<>();
         PriorityQueue<Node> frontier = new PriorityQueue<>();
 
@@ -19,23 +24,25 @@ public class AStar {
         frontier.add(start);
 
         while(!frontier.isEmpty()){
-            Node n = frontier.peek();
-            if(n == target){
-                return n;
+            Node current = frontier.peek();
+            if (current == target){
+                return current;
             }
 
-            for(Node.Edge edge : n.neighbors){
-                Node m = edge.node;
-                double totalWeight = n.g + edge.weight;
+            ArrayList<Node> neighbors = maze.getNeighbors(current);
+
+            for (Node edge : neighbors) {
+                Node m = edge;
+                double totalWeight = current.g + m.weight;
 
                 if(!frontier.contains(m) && !visited.contains(m)){
-                    m.parent = n;
+                    m.parent = current;
                     m.g = totalWeight;
                     m.f = m.g + m.calculateHeuristic(target);
                     frontier.add(m);
                 } else {
                     if(totalWeight < m.g){
-                        m.parent = n;
+                        m.parent = current;
                         m.g = totalWeight;
                         m.f = m.g + m.calculateHeuristic(target);
 
@@ -47,8 +54,8 @@ public class AStar {
                 }
             }
 
-            frontier.remove(n);
-            visited.add(n);
+            frontier.remove(current);
+            visited.add(current);
         }
         return null;
     }

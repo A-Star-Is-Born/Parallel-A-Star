@@ -2,12 +2,17 @@ package main;
 
 import main.astar.AStar;
 import main.display.Display;
+import main.maze.Maze;
 import main.maze.Node;
 
 public class Parallel_AStar {
 
     public static void main(String[] args) {
         AStar aStar = new AStar();
+        Maze maze = new Maze(10);
+        Node res = aStar.run(maze);
+        Display display = new Display();
+        String printable = display.getPath(res);
 
         // logging = setUpLogging()
         // settings = settings(logging)
@@ -17,9 +22,9 @@ public class Parallel_AStar {
         // viz = Visuals
         // viz(results)
 
+        /*
         Node head = new Node(3);
         head.g = 0;
-
         Node n1 = new Node(2);
         Node n2 = new Node(2);
         Node n3 = new Node(2);
@@ -36,11 +41,13 @@ public class Parallel_AStar {
         n4.addBranch(3, target);
         n5.addBranch(1, n4);
         n5.addBranch(3, target);
+        Maze maze = new Maze(10);
+        // Display display = new Display();
+        Node res = aStar.run(maze, head, target);
+        // String printable = display.getPath(res);
+        // System.out.println(printable);
 
-        Display display = new Display();
-        Node res = aStar.run(head, target);
-        String printable = display.getPath(res);
-        System.out.println(printable);
+         */
     }
 
 }
