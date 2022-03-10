@@ -12,19 +12,18 @@ public class AStar {
      * and report statistics on that navigation.
      */
     public Node run(Maze maze){
-        // TODO
+
         Node start = maze.getStart();
         Node target = maze.getTarget();
 
         PriorityQueue<Node> visited = new PriorityQueue<>();
         PriorityQueue<Node> frontier = new PriorityQueue<>();
 
-        start.f = start.g + start.calculateHeuristic(target);
+        start.f = start.g + maze.getHeuristic(start.x, start.y, target.getCoordinates());
         frontier.add(start);
 
-        System.out.println("in Astar, just before alg starts");
-        System.out.println(frontier.size());
-        System.out.println(frontier.peek().x);
+        // System.out.println("in Astar, just before alg starts");
+
 
         /*
         This will run until the frontier, nodes that are visible but
@@ -36,8 +35,6 @@ public class AStar {
             // Get the next priority node
             Node current = frontier.peek();
             if (current == target){
-                System.out.println("x = " + current.x + " and y = " + current.y);
-                System.out.println("YOU SHALL NOT PASS");
                 return current;
             }
 
@@ -49,15 +46,16 @@ public class AStar {
                 Node m = node;
                 double totalWeight = current.g + m.weight;
 
+                /*
                 System.out.println("in Astar, looking at the node");
                 System.out.println("size: " + frontier.size());
                 System.out.println("x = " + frontier.peek().x);
                 System.out.println("y = " + frontier.peek().y);
+                */
 
-                // if we have not been to the node and it
+                // if we have not been to the node, and it
                 // is not already in the list to explore...
                 if(!frontier.contains(m) && !visited.contains(m)) {
-                    System.out.println("Never before seen node? Node loc: x=" + m.x + " y=" + m.y);
                     // it knows this node is how to get to it
                     m.parent = current;
                     // and we calculate weight and put it in the frontier
@@ -82,6 +80,8 @@ public class AStar {
             visited.add(current);
         }
         return null;
+
     }
+
 
 }

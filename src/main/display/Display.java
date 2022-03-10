@@ -26,10 +26,9 @@ public class Display {
         path.add(n.getCoordinates());
         Collections.reverse(path);
 
-        System.out.println("If what follows are mem addresses, reconfigure the toString method for points in Display.java");
-        for(Point step : path){
+        for(Point step : path)
             str.append(step.toString() + " ");
-        }
+
         return str.toString();
     }
 
