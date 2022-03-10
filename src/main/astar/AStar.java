@@ -36,6 +36,8 @@ public class AStar {
             // Get the next priority node
             Node current = frontier.peek();
             if (current == target){
+                System.out.println("x = " + current.x + " and y = " + current.y);
+                System.out.println("YOU SHALL NOT PASS");
                 return current;
             }
 
