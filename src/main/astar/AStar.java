@@ -23,28 +23,50 @@ public class AStar {
         start.f = start.g + start.calculateHeuristic(target);
         frontier.add(start);
 
-        while(!frontier.isEmpty()){
+        System.out.println("in Astar, just before alg starts");
+        System.out.println(frontier.size());
+        System.out.println(frontier.peek().x);
+
+        /*
+        This will run until the frontier, nodes that are visible but
+        not yet explored, is empty. It takes the priority node,
+        adds all its as-yet unexplored neighbors to the queue with their
+        priorities, then finds the next node.
+         */
+        while(!frontier.isEmpty()) {
+            // Get the next priority node
             Node current = frontier.peek();
             if (current == target){
                 return current;
             }
 
+            // call on the maze to find the neighbors of that node
             ArrayList<Node> neighbors = maze.getNeighbors(current);
 
-            for (Node edge : neighbors) {
-                Node m = edge;
+            // look at neighbors, and
+            for (Node node : neighbors) {
+                Node m = node;
                 double totalWeight = current.g + m.weight;
 
+                System.out.println("in Astar, looking at the node");
+                System.out.println("size: " + frontier.size());
+                System.out.println(frontier.peek().x);
+
+                // if we have not been to the node and it
+                // is not already in the list to explore...
                 if(!frontier.contains(m) && !visited.contains(m)){
+                    System.out.println("Never before seen node? Node loc: x=" + m.x + " y=" + m.y);
+                    // it knows this node is how to get to it
                     m.parent = current;
+                    // and we calculate weight and put it in the frontier
                     m.g = totalWeight;
-                    m.f = m.g + m.calculateHeuristic(target);
+                    m.f = m.g + maze.getHeuristic(m.x, m.y, target.getCoordinates());
                     frontier.add(m);
                 } else {
                     if(totalWeight < m.g){
                         m.parent = current;
                         m.g = totalWeight;
-                        m.f = m.g + m.calculateHeuristic(target);
+                        m.f = m.g + maze.getHeuristic(m.x, m.y, target.getCoordinates());
 
                         if(visited.contains(m)){
                             visited.remove(m);

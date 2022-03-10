@@ -16,6 +16,8 @@ public class Node implements Comparable<Node> {
         return new Point(y, x);
     }
 
+    // Delete?
+    /*
     public static class Edge {
 
         public int weight;
@@ -26,7 +28,7 @@ public class Node implements Comparable<Node> {
             this.node = node;
         }
     }
-
+    */
     public double f = Double.MAX_VALUE;
     public double g = Double.MAX_VALUE;
     public double h;
@@ -49,6 +51,10 @@ public class Node implements Comparable<Node> {
     @Override
     public int compareTo(Node o) {
         return Double.compare(this.f, o.f);
+    }
+
+    public boolean equals(Node other) {
+        return this.getCoordinates() == other.getCoordinates();
     }
 
     // TODO: delete?
