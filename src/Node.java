@@ -1,5 +1,3 @@
-package main.maze;
-
 import java.awt.*;
 
 public class Node implements Comparable<Node> {

@@ -1,7 +1,3 @@
-package main.astar;
-import main.maze.Maze;
-import main.maze.Node;
-
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 
