@@ -1,7 +1,3 @@
-package main.display;
-
-import main.maze.Node;
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,10 +1,3 @@
-package main;
-
-import main.astar.AStar;
-import main.display.Display;
-import main.maze.Maze;
-import main.maze.Node;
-
 public class Parallel_AStar {
 
     public static void main(String[] args) {
