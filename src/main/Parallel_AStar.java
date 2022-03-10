@@ -15,7 +15,7 @@ public class Parallel_AStar {
         Display display = new Display();
 
         // though maze does take a dimension of 10
-        Maze maze = new Maze(1);
+        Maze maze = new Maze(4);
         System.out.println("maze init/ gen finished");
 
 

@@ -2,7 +2,6 @@ package main.astar;
 import main.maze.Maze;
 import main.maze.Node;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 
@@ -50,11 +49,12 @@ public class AStar {
 
                 System.out.println("in Astar, looking at the node");
                 System.out.println("size: " + frontier.size());
-                System.out.println(frontier.peek().x);
+                System.out.println("x = " + frontier.peek().x);
+                System.out.println("y = " + frontier.peek().y);
 
                 // if we have not been to the node and it
                 // is not already in the list to explore...
-                if(!frontier.contains(m) && !visited.contains(m)){
+                if(!frontier.contains(m) && !visited.contains(m)) {
                     System.out.println("Never before seen node? Node loc: x=" + m.x + " y=" + m.y);
                     // it knows this node is how to get to it
                     m.parent = current;
@@ -63,12 +63,12 @@ public class AStar {
                     m.f = m.g + maze.getHeuristic(m.x, m.y, target.getCoordinates());
                     frontier.add(m);
                 } else {
-                    if(totalWeight < m.g){
+                    if (totalWeight < m.g) {
                         m.parent = current;
                         m.g = totalWeight;
                         m.f = m.g + maze.getHeuristic(m.x, m.y, target.getCoordinates());
 
-                        if(visited.contains(m)){
+                        if (visited.contains(m)) {
                             visited.remove(m);
                             frontier.add(m);
                         }
