@@ -190,7 +190,7 @@ public class Maze {
     // draw the maze
     public void draw() {
         StdDraw.setPenColor(StdDraw.GREEN);
-        StdDraw.filledCircle(1.5, 1.5, 0.375);
+        StdDraw.filledCircle(1.5, 1.5, RADIUS);
         StdDraw.setPenColor(StdDraw.RED);
         StdDraw.filledCircle(target.x + 0.5, target.y + 0.5, RADIUS);
 
