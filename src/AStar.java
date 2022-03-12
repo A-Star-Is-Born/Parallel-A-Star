@@ -15,7 +15,9 @@ public class AStar {
         PriorityQueue<Node> visited = new PriorityQueue<>();
         PriorityQueue<Node> frontier = new PriorityQueue<>();
 
-        start.f = start.g + maze.getHeuristic(start.x, start.y, target.getCoordinates());
+        start.g = 0.0;
+        start.h = maze.getHeuristic(start.x, start.y, target.getCoordinates());
+        start.f = start.g + start.h;
         frontier.add(start);
 
         // System.out.println("in Astar, just before alg starts");
