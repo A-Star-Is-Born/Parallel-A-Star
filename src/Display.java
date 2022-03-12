@@ -95,11 +95,28 @@ public class Display {
         path.add(n.getCoordinates());
         Collections.reverse(path);
 
-        for(Point step : path) {
-            str.append("-->[" + step.x + "][" + step.y + "]");
+        for(int l = 0; l < path.size(); l++) {
+            if (l == 0) {
+                str.append("Start: ");
+            }
+            str.append("[" + path.get(l).x + "][" + path.get(l).y + "]" + (l == path.size() - 1 ? " (End)" : "-->"));
         }
 
         return str.toString();
     }
 
+    public int getShortestPathLength(Node target) {
+        Node n = target;
+        int count = 0;
+
+        if(n==null)
+            System.out.println("Something went wrong");
+
+        while(n.parent != null){
+            count++;
+            n = n.parent;
+        }
+
+        return count;
+    }
 }
