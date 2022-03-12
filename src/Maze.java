@@ -30,6 +30,7 @@ public class Maze {
     private boolean[][] west;
     private boolean[][] visited;
     private final Node[][] nodeGrid;
+    private static final double RADIUS = 0.375;
 
     private boolean done = false;
 
@@ -55,6 +56,7 @@ public class Maze {
 
         init();
         generate();
+        draw();
     }
 
 
@@ -187,9 +189,10 @@ public class Maze {
 
     // draw the maze
     public void draw() {
-        StdDraw.setPenColor(StdDraw.RED);
-        StdDraw.filledCircle(n/2.0 + 0.5, n/2.0 + 0.5, 0.375);
+        StdDraw.setPenColor(StdDraw.GREEN);
         StdDraw.filledCircle(1.5, 1.5, 0.375);
+        StdDraw.setPenColor(StdDraw.RED);
+        StdDraw.filledCircle(target.x + 0.5, target.y + 0.5, RADIUS);
 
         StdDraw.setPenColor(StdDraw.BLACK);
         for (int x = 1; x <= n; x++) {
@@ -240,8 +243,8 @@ public class Maze {
 
     // a test client
     public static void main(String[] args) {
-        int n = 100; // Integer.parseInt(args[0]);
-        Maze maze = new Maze(n);
+        // int n = 8; // Integer.parseInt(args[0]);
+        Maze maze = new Maze(4);
         StdDraw.enableDoubleBuffering();
         maze.draw();
         // maze.report(2, 2);

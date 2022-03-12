@@ -23,6 +23,8 @@ public class Parallel_AStar {
 
         System.out.println("Shortest path length: " + display.getShortestPathLength(res));
 
+        display.animateShortestPath(res);
+
 
     }
 

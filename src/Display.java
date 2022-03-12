@@ -1,3 +1,6 @@
+import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.StdRandom;
+
 import java.awt.*;
 import java.util.Arrays;
 import java.util.ArrayList;
@@ -118,5 +121,28 @@ public class Display {
         }
 
         return count;
+    }
+
+    public void animateShortestPath(Node target) {
+        Node n = target;
+        List<Node> path = new ArrayList<>();
+
+        if (n == null)
+            System.out.println("Something went wrong");
+
+        while (n.parent != null) {
+            path.add(n);
+            n = n.parent;
+        }
+        path.add(n);
+        Collections.reverse(path);
+
+        for (Node curr : path) {
+            StdDraw.setPenColor(StdDraw.BLUE);
+            StdDraw.filledCircle(curr.x + 0.5, curr.y + 0.5, 0.25);
+            StdDraw.show();
+            StdDraw.pause(30);
+        }
+
     }
 }

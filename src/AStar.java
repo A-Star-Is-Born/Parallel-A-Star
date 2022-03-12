@@ -65,7 +65,6 @@ public class AStar {
                         m.parent = current;
                         m.g = totalWeight;
                         m.f = m.g + maze.getHeuristic(m.x, m.y, target.getCoordinates());
-
                         if (visited.contains(m)) {
                             visited.remove(m);
                             frontier.add(m);
