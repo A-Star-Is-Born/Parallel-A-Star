@@ -6,6 +6,7 @@ public class Node implements Comparable<Node> {
     public int x;
     public double weight = 1.0;
     public Node parent;
+    public boolean[] seen;
 
     public Point getCoordinates() {
         return new Point(x, y);
@@ -24,6 +25,11 @@ public class Node implements Comparable<Node> {
         this.x = x;
         this.h = h;
         this.parent = parent;
+        seen = new boolean[2];
+    }
+
+    public Node clone() {
+        return new Node(x, y, parent, h);
     }
 
     @Override

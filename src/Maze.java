@@ -34,8 +34,8 @@ public class Maze {
 
     private boolean done = false;
 
-    private final Node start;
-    private final Node target;
+    private Node start;
+    private Node target;
 
     public Maze(int n) {
         this.n = n;

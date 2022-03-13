@@ -2,16 +2,21 @@ import java.util.ArrayList;
 import java.util.PriorityQueue;
 
 public class AStar {
+    private Node start;
+    private Node target;
+    private Maze maze;
+
+    public AStar(Maze maze) {
+        this.maze = maze;
+        this.start = maze.getStart();
+        this.target = maze.getTarget();
+    }
 
     /**
      * Given a maze, applies a heuristic in order to navigate through that maze
      * and report statistics on that navigation.
      */
-    public Node run(Maze maze){
-
-        Node start = maze.getStart();
-        Node target = maze.getTarget();
-
+    public Node run(){
         PriorityQueue<Node> visited = new PriorityQueue<>();
         PriorityQueue<Node> frontier = new PriorityQueue<>();
 
