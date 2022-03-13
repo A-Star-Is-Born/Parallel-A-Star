@@ -1,14 +1,13 @@
-import java.util.PriorityQueue;
 import java.util.concurrent.*;
 
 public class ParallelPriorityQueue {
 
-    private static int numThreads;
+    private final int N_THREADS;
     private static SynchronousQueue<Node> targetQueue;
 
     public ParallelPriorityQueue(int numThreads) {
-        this.numThreads = numThreads;
-        targetQueue = new SynchronousQueue<Node>();
+        this.N_THREADS = numThreads;
+        targetQueue = new SynchronousQueue<>();
     }
 
     /**
@@ -17,8 +16,8 @@ public class ParallelPriorityQueue {
      */
     public Node run(Maze maze) throws InterruptedException {
         // initialize data structures
-        PriorityBlockingQueue frontier = new PriorityBlockingQueue();
-        PriorityBlockingQueue visited = new PriorityBlockingQueue();
+        PriorityBlockingQueue<Node> frontier = new PriorityBlockingQueue<>();
+        PriorityBlockingQueue<Node> visited = new PriorityBlockingQueue<>();
 
         // initialize the first node and put it in the queue
         Node start = maze.getStart();
@@ -29,32 +28,21 @@ public class ParallelPriorityQueue {
         frontier.add(start);
 
         // store threads for later
-        Thread[] pqArray = new Thread[numThreads];
+        Thread[] pqArray = new Thread[N_THREADS];
 
-        for (int i = 0; i < numThreads; i++) {
+        for (int i = 0; i < N_THREADS; i++) {
             pqArray[i] = new Thread(new PriorityQueueRunnable(frontier, visited, targetQueue, maze));
             pqArray[i].start();
         }
 
-        // TODO: Does this work?
-        System.out.println("Before take in main ");
         Node result = targetQueue.take();
-        System.out.println("After take in main ");
+        for (Thread t : pqArray)
+            t.interrupt();
 
-//        ExecutorService executor = Executors.newFixedThreadPool(N_THREADS);
+        for (Thread t : pqArray)
+            t.join();
 
-        // PriorityQueueRunnable callable = new PriorityQueueRunnable(frontier, visited, targetQueue, maze);
-
-        /*
-        while there's something in the priority queue
-        treat it like a task and send something to it
-
-         */
-
-
-
-        return null;
-
+        return result;
     }
 
     public static void main(String[] args) throws InterruptedException {
@@ -65,14 +53,13 @@ public class ParallelPriorityQueue {
         Display display = new Display(DIM);
         Maze maze = new Maze(DIM);
         Node res = parallelV1.run(maze);
-        //String printable = display.getPath(res);
-        //System.out.println(printable);
-        //display.print(res);
+        String printable = display.getPath(res);
+        System.out.println(printable);
+        display.print(res);
 
-//        System.out.println("Shortest path length: " + display.getShortestPathLength(res));
+        System.out.println("Shortest path length: " + display.getShortestPathLength(res));
 
-//        display.animateShortestPath(res);
-
+        display.animateShortestPath(res);
     }
 
 }

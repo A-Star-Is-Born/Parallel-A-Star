@@ -3,89 +3,89 @@ import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.SynchronousQueue;
 
 public class PriorityQueueRunnable implements Runnable {
-    private PriorityBlockingQueue frontier;
-    private PriorityBlockingQueue visited;
-    private SynchronousQueue targetQueue;
-    private Maze maze;
-    private Node target, start;
+    private final PriorityBlockingQueue<Node> frontier;
+    private final PriorityBlockingQueue<Node> visited;
+    private final SynchronousQueue<Node> targetQueue;
+    private final Maze maze;
+    private final Node target;
 
-    public PriorityQueueRunnable (PriorityBlockingQueue frontier, PriorityBlockingQueue visited, SynchronousQueue targetQueue,
-                                                           Maze maze ) {
+    public PriorityQueueRunnable (PriorityBlockingQueue<Node> frontier,
+                                  PriorityBlockingQueue<Node> visited,
+                                  SynchronousQueue<Node> targetQueue,
+                                  Maze maze ) {
         this.frontier = frontier;
         this.visited = visited;
         this.maze = maze;
         this.targetQueue = targetQueue;
-        this.start = maze.getStart();
         this.target = maze.getTarget();
-
     }
 
     public void run() {
-        //TODO: Redo is empty logic
-        boolean sentinal = true;
+
         Node current;
 
-        while(sentinal) {
-            //TODO: Check this
+        // todo: this assumes we will always find something
+        while(true) {
+
+            if (Thread.interrupted())
+                return;
+
+            //TODO: Check this: do we need to stop other threads from creating a new current in the PQ
             try {
-                current = (Node) frontier.take();
+                current = frontier.take();
                 if (current == target) {
                     //TODO: update internals
                     targetQueue.put(current);
                     return;
                 }
-
             } catch (InterruptedException e) {
                 return;
             }
-            ArrayList<Node> neighbors = maze.getNeighbors(current);
-        }
 
-/*
-        while(!frontier.isEmpty()) {
-            // Get the next priority node
-            Node current = frontier.peek();
-            if (current == target){
-                return current;
-            }
-
-            // call on the maze to find the neighbors of that node
             ArrayList<Node> neighbors = maze.getNeighbors(current);
 
-            // look at neighbors, and
-            for (Node node : neighbors) {
-                Node m = node;
-                double totalWeight = current.g + m.weight;
+            for (Node neighbor : neighbors) {
+                double totalWeight = current.g + neighbor.weight;
 
+                // TODO: figure out how to prevent recursion here
+                if (!frontier.contains(neighbor) && !visited.contains(neighbor)) {
 
-                // if we have not been to the node, and it
-                // is not already in the list to explore...
-                if(!frontier.contains(m) && !visited.contains(m)) {
-                    // it knows this node is how to get to it
-                    m.parent = current;
-                    // and we calculate weight and put it in the frontier
-                    m.g = totalWeight;
-                    m.f = m.g + maze.getHeuristic(m.x, m.y, target.getCoordinates());
-                    frontier.add(m);
+                    double fValue = totalWeight + maze.getHeuristic(neighbor.x, neighbor.y, target.getCoordinates());
+                    processGValue(current, neighbor, totalWeight, fValue);
+
+                    frontier.add(neighbor); // TODO: this could be optimized to prevent recursion.
                 } else {
-                    if (totalWeight < m.g) {
-                        m.parent = current;
-                        m.g = totalWeight;
-                        m.f = m.g + maze.getHeuristic(m.x, m.y, target.getCoordinates());
-                        if (visited.contains(m)) {
-                            visited.remove(m);
-                            frontier.add(m);
+                    // if the frontier or neighborhood already has the node, we do this
+
+                    // if the cost to get to the node is less than the currently recorded cost at that node
+                    if (totalWeight < neighbor.g) {
+                        // synchronized check if you have the lower g value, and if so, set that gValue
+                        // then continue to set the fValue, if you win the gValue contention
+                        double fValue = totalWeight + maze.getHeuristic(neighbor.x, neighbor.y, target.getCoordinates());
+                        processGValue(current, neighbor, totalWeight, fValue);
+
+                        if (visited.contains(neighbor)) {
+                            try {
+                                visited.remove(neighbor);
+                                frontier.add(neighbor);
+                            } catch (UnsupportedOperationException e) {
+                                System.out.println("PQRunnable: tried to remove a neighbor that wasn't there");
+                            }
                         }
                     }
                 }
-            }
-
-            frontier.remove(current);
-            visited.add(current);
+            }// TODO: this is the problem sir, this right here, we added this to stop an error
+            if (!frontier.contains(current))
+                visited.add(current);
         }
-        return null;
-
-*/
-
     }
+
+    public synchronized void processGValue(Node current, Node neighbor, double totalWight, double fValue) {
+        if (totalWight < neighbor.g) {
+            neighbor.g = totalWight;
+            neighbor.f = fValue;
+            neighbor.parent = current;
+        }
+    }
+
 }
