@@ -2,15 +2,37 @@ import java.util.ArrayList;
 import java.util.PriorityQueue;
 
 public class AStar {
+    private Node start;
+    private Node target;
+    private Maze maze;
+    public ArrayList<Node> finalPath;
+
+    public AStar(Maze maze) {
+        this.maze = maze;
+        this.start = maze.getStart();
+        this.target = maze.getTarget();
+        this.finalPath = new ArrayList<Node>();
+    }
+
+    public void swap() {
+        Node temp = maze.getStart();
+        start = target;
+        target = temp;
+    }
+
+    public void print() {
+        System.out.println("S: [" + start.x + "][" + start.y + "]");
+        System.out.println("E: [" + target.x + "][" + target.y + "]");
+    }
 
     /**
      * Given a maze, applies a heuristic in order to navigate through that maze
      * and report statistics on that navigation.
      */
-    public Node run(Maze maze){
+    public Node run(){
 
-        Node start = maze.getStart();
-        Node target = maze.getTarget();
+        // start = maze.getStart();
+        // target = maze.getTarget();
 
         PriorityQueue<Node> visited = new PriorityQueue<>();
         PriorityQueue<Node> frontier = new PriorityQueue<>();
@@ -56,13 +78,16 @@ public class AStar {
                 if(!frontier.contains(m) && !visited.contains(m)) {
                     // it knows this node is how to get to it
                     m.parent = current;
+                    finalPath.add(current);
                     // and we calculate weight and put it in the frontier
                     m.g = totalWeight;
                     m.f = m.g + maze.getHeuristic(m.x, m.y, target.getCoordinates());
                     frontier.add(m);
+                    // System.out.println("ADDED! [" + m.x + "][" + m.y + "]");
                 } else {
                     if (totalWeight < m.g) {
                         m.parent = current;
+                        finalPath.add(current);
                         m.g = totalWeight;
                         m.f = m.g + maze.getHeuristic(m.x, m.y, target.getCoordinates());
                         if (visited.contains(m)) {

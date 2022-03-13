@@ -34,8 +34,16 @@ public class Maze {
 
     private boolean done = false;
 
-    private final Node start;
-    private final Node target;
+    private Node start;
+    private Node target;
+
+    public void clearNodeParents() {
+        for (int i = 1; i < n + 1; i++) {
+            for (int j = 1; j < n + 1; j++) {
+                nodeGrid[i][j].parent = null;
+            }
+        }
+    }
 
     public Maze(int n) {
         this.n = n;
@@ -216,6 +224,14 @@ public class Maze {
 
     public Node getStart() {
         return start;
+    }
+
+    public void setTarget(int y, int x) {
+        target = nodeGrid[y][x];
+    }
+
+    public void setStart(int y, int x) {
+        start = nodeGrid[y][x];
     }
 
     public ArrayList<Node> getNeighbors(Node current) {
