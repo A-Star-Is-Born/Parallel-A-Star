@@ -14,7 +14,7 @@ public class ParallelPriorityQueue {
      * Given a maze, applies a heuristic in order to navigate through that maze
      * and report statistics on that navigation.
      */
-    public Node run(Maze maze) throws InterruptedException {
+    public Node run(Maze maze) {
         // initialize data structures
         PriorityBlockingQueue<Node> frontier = new PriorityBlockingQueue<>();
         PriorityBlockingQueue<Node> visited = new PriorityBlockingQueue<>();
@@ -34,13 +34,25 @@ public class ParallelPriorityQueue {
             pqArray[i] = new Thread(new PriorityQueueRunnable(frontier, visited, targetQueue, maze));
             pqArray[i].start();
         }
+        Node result = null;
+        try {
+            result = targetQueue.take();
+        } catch (InterruptedException e) {
+            System.out.println("Error in PPQ trying to take from the queue.");
+        }
 
-        Node result = targetQueue.take();
+
         for (Thread t : pqArray)
             t.interrupt();
 
-        for (Thread t : pqArray)
-            t.join();
+        try {
+            for (Thread t : pqArray)
+                t.join();
+        } catch (InterruptedException e) {
+            System.out.println("Exception joining threads: " + e);
+        }
+
+
 
         return result;
     }
@@ -53,7 +65,9 @@ public class ParallelPriorityQueue {
         Display display = new Display(DIM);
         Maze maze = new Maze(DIM);
         Node res = parallelV1.run(maze);
-        String printable = display.getPath(res);
+        String printable = "";
+        if (res != null)
+            printable = display.getPath(res);
         System.out.println(printable);
         display.print(res);
 
