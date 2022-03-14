@@ -123,7 +123,7 @@ public class Display {
         return count;
     }
 
-    public void animateShortestPath(Node target) {
+    public void animateShortestPath(Node target, Color c, double size) {
         Node n = target;
         List<Node> path = new ArrayList<>();
 
@@ -138,11 +138,31 @@ public class Display {
         Collections.reverse(path);
 
         for (Node curr : path) {
-            StdDraw.setPenColor(StdDraw.BLUE);
-            StdDraw.filledCircle(curr.x + 0.5, curr.y + 0.5, 0.25);
+            StdDraw.setPenColor(c);
+            StdDraw.filledCircle(curr.x + 0.5, curr.y + 0.5, size);
             StdDraw.show();
             StdDraw.pause(30);
         }
 
+    }
+
+    public ArrayList<Node> getShortestPathList(Node target) {
+        Node n = target;
+        ArrayList<Node> path = new ArrayList<>();
+
+        if (n == null)
+            System.out.println("Something went wrong");
+
+        while (n.parent != null) {
+            path.add(n);
+            n = n.parent;
+        }
+        path.add(n);
+        Collections.reverse(path);
+        for (Node m : path) {
+            System.out.print("[" + m.x + "][" + m.y + "] ");
+        }
+        System.out.println("\n");
+        return (ArrayList<Node>) path.clone();
     }
 }
