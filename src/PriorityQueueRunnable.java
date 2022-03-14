@@ -21,20 +21,16 @@ public class PriorityQueueRunnable implements Runnable {
     }
 
     public void run() {
-
         Node current;
 
-        // todo: this assumes we will always find something
         while(true) {
 
             if (Thread.interrupted())
                 return;
 
-            //TODO: Check this: do we need to stop other threads from creating a new current in the PQ
             try {
                 current = frontier.take();
                 if (current == target) {
-                    //TODO: update internals
                     targetQueue.put(current);
                     return;
                 }
@@ -46,21 +42,14 @@ public class PriorityQueueRunnable implements Runnable {
 
             for (Node neighbor : neighbors) {
                 double totalWeight = current.g + neighbor.weight;
-
-                // TODO: figure out how to prevent recursion here
                 if (!frontier.contains(neighbor) && !visited.contains(neighbor)) {
 
                     double fValue = totalWeight + maze.getHeuristic(neighbor.x, neighbor.y, target.getCoordinates());
                     processGValue(current, neighbor, totalWeight, fValue);
 
-                    frontier.add(neighbor); // TODO: this could be optimized to prevent recursion.
+                    frontier.add(neighbor);
                 } else {
-                    // if the frontier or neighborhood already has the node, we do this
-
-                    // if the cost to get to the node is less than the currently recorded cost at that node
                     if (totalWeight < neighbor.g) {
-                        // synchronized check if you have the lower g value, and if so, set that gValue
-                        // then continue to set the fValue, if you win the gValue contention
                         double fValue = totalWeight + maze.getHeuristic(neighbor.x, neighbor.y, target.getCoordinates());
                         processGValue(current, neighbor, totalWeight, fValue);
 
@@ -74,9 +63,10 @@ public class PriorityQueueRunnable implements Runnable {
                         }
                     }
                 }
-            }// TODO: this is the problem sir, this right here, we added this to stop an error
-            if (!frontier.contains(current))
+            }
+            if (!frontier.contains(current)) {
                 visited.add(current);
+            }
         }
     }
 
