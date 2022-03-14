@@ -41,10 +41,6 @@ public class ParallelPriorityQueue {
             System.out.println("Error in PPQ trying to take from the queue.");
         }
 
-
-        for (Thread t : pqArray)
-            t.interrupt();
-
         try {
             for (Thread t : pqArray)
                 t.join();
@@ -73,7 +69,7 @@ public class ParallelPriorityQueue {
 
         System.out.println("Shortest path length: " + display.getShortestPathLength(res));
 
-        display.animateShortestPath(res);
+        // display.animateShortestPath(res);
     }
 
 }
