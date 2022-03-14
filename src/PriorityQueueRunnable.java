@@ -8,7 +8,7 @@ public class PriorityQueueRunnable implements Runnable {
     private final SynchronousQueue<Node> targetQueue;
     private final Maze maze;
     private final Node target;
-    private double currentTargetWeight;
+    private static double currentTargetWeight;
     private int numThreads;
     private static int blockingThreads;
 
@@ -43,14 +43,11 @@ public class PriorityQueueRunnable implements Runnable {
         }
     }
 
-    private synchronized void incrementThreads(boolean up) {
-        System.out.println("incoming " + blockingThreads);
+    private synchronized void setThreads(boolean up) {
         if (up) {
             blockingThreads++;
-            System.out.println("set at " + blockingThreads);
             if (numThreads == blockingThreads) {
                 try {
-                    System.out.println("HOORAY");
                     targetQueue.put(target);
                     return;
                 } catch (InterruptedException e) {
@@ -58,10 +55,8 @@ public class PriorityQueueRunnable implements Runnable {
                 }
             }
         } else {
-            System.out.println("decrement: " + blockingThreads);
             blockingThreads--;
         }
-        System.out.println("Outgoing: " + blockingThreads);
     }
 
     public void run() {
@@ -74,10 +69,9 @@ public class PriorityQueueRunnable implements Runnable {
             }
 
             try {
-                incrementThreads(true);
+                setThreads(true);
                 current = frontier.take();
-
-                incrementThreads(false);
+                setThreads(false);
 
                 if (current == target) {
                     setAssumedFinalWeight(current.weight);

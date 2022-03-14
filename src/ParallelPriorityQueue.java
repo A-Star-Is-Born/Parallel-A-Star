@@ -36,9 +36,7 @@ public class ParallelPriorityQueue {
         }
         Node result = null;
         try {
-            System.out.println("Main: Before take");
             result = targetQueue.take();
-            System.out.println("Main: after take");
         } catch (InterruptedException e) {
             System.out.println("Error in PPQ trying to take from the queue.");
         }
