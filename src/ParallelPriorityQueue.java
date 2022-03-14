@@ -31,7 +31,7 @@ public class ParallelPriorityQueue {
         Thread[] pqArray = new Thread[N_THREADS];
 
         for (int i = 0; i < N_THREADS; i++) {
-            pqArray[i] = new Thread(new PriorityQueueRunnable(frontier, visited, targetQueue, maze));
+            pqArray[i] = new Thread(new PriorityQueueRunnable(frontier, visited, targetQueue, N_THREADS, maze));
             pqArray[i].start();
         }
         Node result = null;
@@ -40,9 +40,6 @@ public class ParallelPriorityQueue {
         } catch (InterruptedException e) {
             System.out.println("Error in PPQ trying to take from the queue.");
         }
-
-        for (Thread t : pqArray)
-            t.interrupt();
 
         try {
             for (Thread t : pqArray)
@@ -57,7 +54,7 @@ public class ParallelPriorityQueue {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        int DIM = 20;
+        int DIM = 3;
         int numThreads = 4;
 
         ParallelPriorityQueue parallelV1 = new ParallelPriorityQueue(numThreads);
