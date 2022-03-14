@@ -41,7 +41,6 @@ public class ParallelPriorityQueue {
             System.out.println("Error in PPQ trying to take from the queue.");
         }
 
-
         for (Thread t : pqArray)
             t.interrupt();
 

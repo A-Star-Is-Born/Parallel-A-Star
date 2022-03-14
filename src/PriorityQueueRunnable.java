@@ -23,22 +23,27 @@ public class PriorityQueueRunnable implements Runnable {
     }
 
     private synchronized void setAssumedFinalWeight(double weight) {
-        if (assumedFinalWeight > weight)
+        if (assumedFinalWeight > weight) {
             assumedFinalWeight = weight;
+        }
+    }
+
+    private synchronized void processGValue(Node current, Node neighbor, double totalWight, double fValue) {
+        if (totalWight < neighbor.g) {
+            neighbor.g = totalWight;
+            neighbor.f = fValue;
+            neighbor.parent = current;
+        }
     }
 
     public void run() {
-
         Node current;
 
-        // todo: this assumes we will always find something
         while(true) {
 
             if (Thread.interrupted())
                 return;
 
-
-            //TODO: Check this: do we need to stop other threads from creating a new current in the PQ
             try {
                 current = frontier.take();
                 if (current == target) {
@@ -58,21 +63,14 @@ public class PriorityQueueRunnable implements Runnable {
 
             for (Node neighbor : neighbors) {
                 double totalWeight = current.g + neighbor.weight;
-
-                // TODO: figure out how to prevent recursion here
                 if (!frontier.contains(neighbor) && !visited.contains(neighbor)) {
 
                     double fValue = totalWeight + maze.getHeuristic(neighbor.x, neighbor.y, target.getCoordinates());
                     processGValue(current, neighbor, totalWeight, fValue);
 
-                    frontier.add(neighbor); // TODO: this could be optimized to prevent recursion.
+                    frontier.add(neighbor);
                 } else {
-                    // if the frontier or neighborhood already has the node, we do this
-
-                    // if the cost to get to the node is less than the currently recorded cost at that node
                     if (totalWeight < neighbor.g) {
-                        // synchronized check if you have the lower g value, and if so, set that gValue
-                        // then continue to set the fValue, if you win the gValue contention
                         double fValue = totalWeight + maze.getHeuristic(neighbor.x, neighbor.y, target.getCoordinates());
                         processGValue(current, neighbor, totalWeight, fValue);
 
@@ -86,18 +84,9 @@ public class PriorityQueueRunnable implements Runnable {
                         }
                     }
                 }
-            }// TODO: this is the problem sir, this right here, we added this to stop an error
+            }
             if (!frontier.contains(current))
                 visited.add(current);
         }
     }
-
-    public synchronized void processGValue(Node current, Node neighbor, double totalWight, double fValue) {
-        if (totalWight < neighbor.g) {
-            neighbor.g = totalWight;
-            neighbor.f = fValue;
-            neighbor.parent = current;
-        }
-    }
-
 }
