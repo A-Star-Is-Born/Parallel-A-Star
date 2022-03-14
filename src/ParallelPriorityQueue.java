@@ -73,7 +73,7 @@ public class ParallelPriorityQueue {
 
         System.out.println("Shortest path length: " + display.getShortestPathLength(res));
 
-        display.animateShortestPath(res);
+        // display.animateShortestPath(res);
     }
 
 }

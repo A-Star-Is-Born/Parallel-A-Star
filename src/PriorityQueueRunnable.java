@@ -8,6 +8,7 @@ public class PriorityQueueRunnable implements Runnable {
     private final SynchronousQueue<Node> targetQueue;
     private final Maze maze;
     private final Node target;
+    private double assumedFinalWeight;
 
     public PriorityQueueRunnable (PriorityBlockingQueue<Node> frontier,
                                   PriorityBlockingQueue<Node> visited,
@@ -18,6 +19,12 @@ public class PriorityQueueRunnable implements Runnable {
         this.maze = maze;
         this.targetQueue = targetQueue;
         this.target = maze.getTarget();
+        this.assumedFinalWeight = Double.MAX_VALUE;
+    }
+
+    private synchronized void setAssumedFinalWeight(double weight) {
+        if (assumedFinalWeight > weight)
+            assumedFinalWeight = weight;
     }
 
     public void run() {
@@ -30,15 +37,20 @@ public class PriorityQueueRunnable implements Runnable {
             if (Thread.interrupted())
                 return;
 
+
             //TODO: Check this: do we need to stop other threads from creating a new current in the PQ
             try {
                 current = frontier.take();
                 if (current == target) {
-                    //TODO: update internals
+                    setAssumedFinalWeight(current.weight);
                     targetQueue.put(current);
                     return;
                 }
             } catch (InterruptedException e) {
+                return;
+            }
+
+            if (current.weight > assumedFinalWeight) {
                 return;
             }
 
