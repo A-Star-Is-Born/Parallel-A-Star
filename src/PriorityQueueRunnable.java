@@ -74,14 +74,14 @@ public class PriorityQueueRunnable implements Runnable {
                 setThreads(false);
 
                 if (current == target) {
-                    setAssumedFinalWeight(current.weight);
+                    setAssumedFinalWeight(current.f);
                     continue;
                 }
             } catch (InterruptedException e) {
                 return;
             }
 
-            if (current.weight > currentTargetWeight) {
+            if (current.f > currentTargetWeight) {
                 continue;
             }
 

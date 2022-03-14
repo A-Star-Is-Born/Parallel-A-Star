@@ -41,11 +41,11 @@ public class Bidirectional {
 
         @Override
         public void run() {
-            System.out.println("Thread" + threadName + " start: [" + start.x + "][" + start.y + "]");
+            // System.out.println("Thread" + threadName + " start: [" + start.x + "][" + start.y + "]");
             Node current = null;
             while(!frontier[threadName].isEmpty()) {
                 if (Thread.interrupted()) {
-                    System.out.println("Thread" + threadName + " was interrupted.");
+                    // System.out.println("Thread" + threadName + " was interrupted.");
                     return;
                 }
                 current = frontier[threadName].peek();
@@ -58,8 +58,8 @@ public class Bidirectional {
                         }
                         Node c = current;
                         biDPathList[threadName] = c;
-                        System.out.println("Meeting midway, with Thread" + threadName + " ending at: [" + c.x + "][" + c.y + 
-                            "] and Thread" + (1 - threadName) + " ending at: [" + neigh.x + "][" + neigh.y + "]");
+                        //System.out.println("Meeting midway, with Thread" + threadName + " ending at: [" + c.x + "][" + c.y +
+                        //    "] and Thread" + (1 - threadName) + " ending at: [" + neigh.x + "][" + neigh.y + "]");
                         biDPathList[1 - threadName] = neigh;
                         return;
                     }

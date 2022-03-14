@@ -4,11 +4,11 @@ public class Parallel_AStar {
     private static final int DIM = 150;
 
     public static void main(String[] args) {
-        standardVisualization();
+        // standardVisualization();
 
         // This is not guaranteed to work if you have not gone through maze.java
         // and commented out all lines of code to do with display.
-        testTimes(400);
+        testTimes(40);
 
     }
 
@@ -37,7 +37,7 @@ public class Parallel_AStar {
         // ------------------------
         // SEQUENTIAL
         long sequentialTotal = 0;
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < numTimesToTest; i++) {
             maze = new Maze(DIM);
             aStar = new AStar(maze);
             long timingStart = System.currentTimeMillis();
@@ -50,7 +50,7 @@ public class Parallel_AStar {
         // ------------------------
         // BIDIRECTIONAL
         long bidirectionalTotal = 0;
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < numTimesToTest; i++) {
             maze = new Maze(DIM);
             long timingStart = System.currentTimeMillis();
             bidirectionalStar = new Bidirectional(maze);
@@ -68,7 +68,7 @@ public class Parallel_AStar {
         // ------------------------
         // PRIORITY QUEUEUEUEUE
         long pqTotal = 0;
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < numTimesToTest; i++) {
             maze = new Maze(DIM);
             pqStar = new ParallelPriorityQueue(4);
             long pqStart = System.currentTimeMillis();
