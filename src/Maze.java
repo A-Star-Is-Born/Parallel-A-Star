@@ -1,3 +1,4 @@
+import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdRandom;
 
@@ -39,8 +40,9 @@ public class Maze {
 
     public Maze(int n) {
         this.n = n;
-        StdDraw.setXscale(0, n+2);
-        StdDraw.setYscale(0, n+2);
+        // TODO: this stuff
+        // StdDraw.setXscale(0, n+2);
+        // StdDraw.setYscale(0, n+2);
         nodeGrid = new Node[n+2][n+2];
 
         Point targetPoint = new Point(n, n);
@@ -56,7 +58,8 @@ public class Maze {
 
         init();
         generate();
-        draw();
+        // TODO: this stuff
+        // draw();
     }
 
 
@@ -88,6 +91,53 @@ public class Maze {
         }
     }
 
+
+
+    // generate maze using a stack instead of recursion
+    private void gen(Point origin) {
+        Stack<Point> sharp = new Stack<>();
+        sharp.push(origin);
+        int x;
+        int y;
+        Point current;
+        while (!sharp.isEmpty()) {
+            current = sharp.peek();
+            x = current.x;
+            y = current.y;
+            visited[x][y] = true;
+            if (!visited[x][y+1] || !visited[x+1][y] || !visited[x][y-1] || !visited[x-1][y]) {
+                while (true) {
+                    double r = StdRandom.uniform(4);
+                    if (r == 0 && !visited[x][y+1]) {
+                        north[x][y] = false;
+                        south[x][y+1] = false;
+                        sharp.push(new Point(x, y+ 1));
+                        break;
+                    }
+                    else if (r == 1 && !visited[x+1][y]) {
+                        east[x][y] = false;
+                        west[x+1][y] = false;
+                        sharp.push(new Point(x + 1, y));
+                        break;
+                    }
+                    else if (r == 2 && !visited[x][y-1]) {
+                        south[x][y] = false;
+                        north[x][y-1] = false;
+                        sharp.push(new Point(x, y - 1));
+                        break;
+                    }
+                    else if (r == 3 && !visited[x-1][y]) {
+                        west[x][y] = false;
+                        east[x-1][y] = false;
+                        sharp.push(new Point(x - 1, y));
+                        break;
+                    }
+                }
+            } else {
+                sharp.pop();
+            }
+        }
+    }
 
     // generate the maze
     private void generate(int x, int y) {
@@ -129,7 +179,8 @@ public class Maze {
 
     // generate the maze starting from lower left
     private void generate() {
-        generate(1, 1);
+        gen(new Point(1, 1));
+        // generate(1, 1);
 /*
         // delete some random walls
         for (int i = 0; i < n; i++) {
