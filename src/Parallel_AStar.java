@@ -1,14 +1,21 @@
 import edu.princeton.cs.algs4.StdDraw;
 
 public class Parallel_AStar {
-    private static final int DIM = 150;
+    private static final int DIM = 20;
 
     public static void main(String[] args) {
         // standardVisualization();
 
-        // This is not guaranteed to work if you have not gone through maze.java
-        // and commented out all lines of code to do with display.
-        testTimes(40);
+
+        for (int i = 1; i <= 8; i *= 2) {
+            testTimes(20, 500, i);
+        }
+        for (int i = 1; i <= 8; i *= 2) {
+            testTimes(200, 500, i);
+        }
+        for (int i = 1; i <= 8; i *= 2) {
+            testTimes(500, 500, i);
+        }
 
     }
 
@@ -28,31 +35,36 @@ public class Parallel_AStar {
         display.animateShortestPath(res, StdDraw.BLUE, 0.25);
     }
 
-    public static void testTimes(int numTimesToTest) {
+    public static void testTimes(int dimensions, int numTimesToTest, int numThreads) {
         Maze maze;
         AStar aStar;
         ParallelPriorityQueue pqStar;
         Bidirectional bidirectionalStar;
 
+
+        System.out.println("Testing dim: " + dimensions + " numThreads: " + numThreads);
         // ------------------------
         // SEQUENTIAL
         long sequentialTotal = 0;
         for (int i = 0; i < numTimesToTest; i++) {
-            maze = new Maze(DIM);
+            maze = new Maze(dimensions);
             aStar = new AStar(maze);
-            long timingStart = System.currentTimeMillis();
+            long timingStart = System.nanoTime();
             Node res = aStar.run();
-            long timingEnd = System.currentTimeMillis();
+            long timingEnd = System.nanoTime();
             sequentialTotal += timingEnd - timingStart;
         }
         long sequentialTimePer = sequentialTotal / numTimesToTest;
+
+        System.out.println("Timing sequential = " + sequentialTimePer);
+
 
         // ------------------------
         // BIDIRECTIONAL
         long bidirectionalTotal = 0;
         for (int i = 0; i < numTimesToTest; i++) {
-            maze = new Maze(DIM);
-            long timingStart = System.currentTimeMillis();
+            maze = new Maze(dimensions);
+            long timingStart = System.nanoTime();
             bidirectionalStar = new Bidirectional(maze);
             try {
                 bidirectionalStar.thread1.join();
@@ -60,27 +72,36 @@ public class Parallel_AStar {
             } catch (InterruptedException e) {
                 return;
             }
-            long timingEnd = System.currentTimeMillis();
+            long timingEnd = System.nanoTime();
             bidirectionalTotal += timingEnd - timingStart;
         }
         long bidirectionalTimePer = bidirectionalTotal / numTimesToTest;
+
+        System.out.println("Timing bidirectional = " + bidirectionalTimePer);
 
         // ------------------------
         // PRIORITY QUEUEUEUEUE
         long pqTotal = 0;
         for (int i = 0; i < numTimesToTest; i++) {
-            maze = new Maze(DIM);
-            pqStar = new ParallelPriorityQueue(4);
-            long pqStart = System.currentTimeMillis();
+            maze = new Maze(dimensions);
+            pqStar = new ParallelPriorityQueue(numThreads);
+            long pqStart = System.nanoTime();
             Node res = pqStar.run(maze);
-            long pqEnd = System.currentTimeMillis();
+            long pqEnd = System.nanoTime();
             pqTotal += pqEnd - pqStart;
         }
         long pqTimePer = pqTotal / numTimesToTest;
 
-        System.out.println("Timing sequential = " + sequentialTimePer);
         System.out.println("Timing parallel = " + pqTimePer);
-        System.out.println("Timing bidirectional = " + bidirectionalTimePer);
+
+
+        System.out.println("Calculating");
+        System.out.println("pq = " + (double) sequentialTimePer / pqTimePer);
+        System.out.println("bi = " + (double) sequentialTimePer / bidirectionalTimePer);
+
+        System.out.println("\n\n");
+
+
 
     }
 
