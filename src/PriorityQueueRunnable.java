@@ -8,30 +8,23 @@ public class PriorityQueueRunnable implements Runnable {
     private final SynchronousQueue<Node> targetQueue;
     private final Maze maze;
     private final Node target;
-    private static double currentTargetWeight;
-    private int numThreads;
-    private static int blockingThreads;
-
+    private double assumedFinalWeight;
 
     public PriorityQueueRunnable (PriorityBlockingQueue<Node> frontier,
                                   PriorityBlockingQueue<Node> visited,
                                   SynchronousQueue<Node> targetQueue,
-                                  int numThreads,
                                   Maze maze ) {
         this.frontier = frontier;
         this.visited = visited;
-        this.numThreads = numThreads;
         this.maze = maze;
         this.targetQueue = targetQueue;
         this.target = maze.getTarget();
-        this.blockingThreads = 0;
-        this.currentTargetWeight = Double.MAX_VALUE;
-
+        this.assumedFinalWeight = Double.MAX_VALUE;
     }
 
     private synchronized void setAssumedFinalWeight(double weight) {
-        if (currentTargetWeight > weight) {
-            currentTargetWeight = weight;
+        if (assumedFinalWeight > weight) {
+            assumedFinalWeight = weight;
         }
     }
 
@@ -43,46 +36,27 @@ public class PriorityQueueRunnable implements Runnable {
         }
     }
 
-    private synchronized void setThreads(boolean up) {
-        if (up) {
-            blockingThreads++;
-            if (numThreads == blockingThreads) {
-                try {
-                    targetQueue.put(target);
-                    return;
-                } catch (InterruptedException e) {
-                    System.out.println("Put to targetQueue failed from PQR");
-                }
-            }
-        } else {
-            blockingThreads--;
-        }
-    }
-
     public void run() {
         Node current;
 
         while(true) {
 
-            if (Thread.interrupted()) {
+            if (Thread.interrupted())
                 return;
-            }
 
             try {
-                setThreads(true);
                 current = frontier.take();
-                setThreads(false);
-
                 if (current == target) {
-                    setAssumedFinalWeight(current.f);
-                    continue;
+                    setAssumedFinalWeight(current.weight);
+                    targetQueue.put(current);
+                    return;
                 }
             } catch (InterruptedException e) {
                 return;
             }
 
-            if (current.f > currentTargetWeight) {
-                continue;
+            if (current.weight > assumedFinalWeight) {
+                return;
             }
 
             ArrayList<Node> neighbors = maze.getNeighbors(current);
@@ -111,11 +85,8 @@ public class PriorityQueueRunnable implements Runnable {
                     }
                 }
             }
-
-            if (!frontier.contains(current)) {
+            if (!frontier.contains(current))
                 visited.add(current);
-            }
-
         }
     }
 }
