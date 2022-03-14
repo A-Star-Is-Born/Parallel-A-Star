@@ -15,8 +15,8 @@ public class Bidirectional_Driver {
             return;
         }
         
-        display.animateShortestPath(biD.biDPathList[0], StdDraw.BLUE, 0.25);
-        display.animateShortestPath(biD.biDPathList[1], StdDraw.ORANGE, 0.15);
+        display.animateShortestPath(biD.biDPathList[0], StdDraw.GREEN, 0.25);
+        display.animateShortestPath(biD.biDPathList[1], StdDraw.RED, 0.15);
         int pathCount1 = display.getShortestPathLength(biD.biDPathList[0]);
         int pathCount2 = display.getShortestPathLength(biD.biDPathList[1]);
         System.out.println("Bi-directional combined shortest path count: " + pathCount1 + " + " + pathCount2 + 
