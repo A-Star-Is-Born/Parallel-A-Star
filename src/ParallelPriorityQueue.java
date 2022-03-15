@@ -1,3 +1,4 @@
+import edu.princeton.cs.algs4.StdDraw;
 import java.util.concurrent.*;
 
 public class ParallelPriorityQueue {
@@ -53,13 +54,14 @@ public class ParallelPriorityQueue {
         Display display = new Display(DIM);
         Maze maze = new Maze(DIM);
         Node res = parallelV1.run(maze);
-        String printable = display.getPath(res);
-        System.out.println(printable);
-        display.print(res);
+
+        display.printPathAsList(res);
+        
+        display.printMazePath(res);
 
         System.out.println("Shortest path length: " + display.getShortestPathLength(res));
 
-        display.animateShortestPath(res);
+        display.animateShortestPath(res, StdDraw.BLUE, 0.25);
     }
 
 }

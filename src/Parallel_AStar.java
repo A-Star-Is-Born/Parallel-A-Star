@@ -10,9 +10,9 @@ public class Parallel_AStar {
 
         Node res = aStar.run();
         
-        String printable = display.getPath(res);
-        System.out.println(printable);
-        display.print(res);
+        display.printPathAsList(res);
+        
+        display.printMazePath(res);
         
         System.out.println("Shortest path length: " + display.getShortestPathLength(res));
         
