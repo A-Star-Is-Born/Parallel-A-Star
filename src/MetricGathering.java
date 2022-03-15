@@ -31,8 +31,8 @@ public class MetricGathering {
         
         // Test with DIM of 20, 200, 500 at 20 times each (PQ for 1, 2, 4, 8 threads each)
         testTimes(20, 20);
-        // testTimes(200, 20);
-        // testTimes(500, 20);
+        testTimes(200, 20);
+        testTimes(500, 20);
     }
 
     /**
@@ -104,7 +104,6 @@ public class MetricGathering {
             // Calculate speedup = sequential / parallel time
             System.out.println("Calculating pq speedup = " + (double) sequentialTimePer / pqTimePer);
         }
-        System.out.println("Calculating bi = " + (double) sequentialTimePer / bidirectionalTimePer);
 
         System.out.println("\n\n");
 
