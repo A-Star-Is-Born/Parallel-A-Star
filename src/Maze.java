@@ -11,6 +11,7 @@
  * Most of code for maze creation was borrowed. See paper for reference.
  */
 
+import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdRandom;
 
@@ -102,44 +103,51 @@ public class Maze {
     }
 
     /**
-     * Creates the random corridors of the maze using recursion.
-     *
-     * @param x x-coordinate of previous cell
-     * @param y y-coordinate of previous cell
+     * Generates random corrirods, reworked from the original recursion based method.
+     * @param origin the point we calculate from.
      */
-    private void generate(int x, int y) {
-        visited[x][y] = true;
-
-        // while there is an unvisited neighbor
-        while (!visited[x][y+1] || !visited[x+1][y] || !visited[x][y-1] || !visited[x-1][y]) {
-
-            // pick random neighbor (could use Knuth's trick instead)
-            while (true) {
-                double r = StdRandom.uniform(4);
-                if (r == 0 && !visited[x][y+1]) {
-                    north[x][y] = false;
-                    south[x][y+1] = false;
-                    generate(x, y + 1);
-                    break;
+    // generate maze using a stack instead of recursion
+    private void generate(Point origin) {
+        Stack<Point> sharp = new Stack<>();
+        sharp.push(origin);
+        int x;
+        int y;
+        Point current;
+        while (!sharp.isEmpty()) {
+            current = sharp.peek();
+            x = current.x;
+            y = current.y;
+            visited[x][y] = true;
+            if (!visited[x][y+1] || !visited[x+1][y] || !visited[x][y-1] || !visited[x-1][y]) {
+                while (true) {
+                    double r = StdRandom.uniform(4);
+                    if (r == 0 && !visited[x][y+1]) {
+                        north[x][y] = false;
+                        south[x][y+1] = false;
+                        sharp.push(new Point(x, y+ 1));
+                        break;
+                    }
+                    else if (r == 1 && !visited[x+1][y]) {
+                        east[x][y] = false;
+                        west[x+1][y] = false;
+                        sharp.push(new Point(x + 1, y));
+                        break;
+                    }
+                    else if (r == 2 && !visited[x][y-1]) {
+                        south[x][y] = false;
+                        north[x][y-1] = false;
+                        sharp.push(new Point(x, y - 1));
+                        break;
+                    }
+                    else if (r == 3 && !visited[x-1][y]) {
+                        west[x][y] = false;
+                        east[x-1][y] = false;
+                        sharp.push(new Point(x - 1, y));
+                        break;
+                    }
                 }
-                else if (r == 1 && !visited[x+1][y]) {
-                    east[x][y] = false;
-                    west[x+1][y] = false;
-                    generate(x+1, y);
-                    break;
-                }
-                else if (r == 2 && !visited[x][y-1]) {
-                    south[x][y] = false;
-                    north[x][y-1] = false;
-                    generate(x, y-1);
-                    break;
-                }
-                else if (r == 3 && !visited[x-1][y]) {
-                    west[x][y] = false;
-                    east[x-1][y] = false;
-                    generate(x-1, y);
-                    break;
-                }
+            } else {
+                sharp.pop();
             }
         }
     }
@@ -150,7 +158,7 @@ public class Maze {
      * this could be causing thread 0 in bi-directional to have easy pathfinding.
      */
     private void generate() {
-        generate(1, 1);
+        generate(new Point(1, 1));
     }
 
     /**
