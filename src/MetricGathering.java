@@ -32,22 +32,24 @@ public class MetricGathering {
             testTimes(500, 20, i);
         }
 
+        testTimes(20, 20);
+        testTimes(200, 20);
+        testTimes(500, 20);
     }
 
     /**
      *
      * @param dimensions the dimension of the maze
      * @param numTimesToTest number of times to test
-     * @param numThreads number of threads to use
      */
-    public static void testTimes(int dimensions, int numTimesToTest, int numThreads) {
+    public static void testTimes(int dimensions, int numTimesToTest) {
         Maze maze; // the maze to run the search
         Sequential aStar; // sequential A Star search
         ParallelPriorityQueue pqStar; // Parallel A Star search using concurrent priority queue
         Bidirectional bidirectionalStar; // Parallel A Star search using bi-directional A-Star
 
 
-        System.out.println("Testing dim: " + dimensions + " numThreads: " + numThreads);
+        System.out.println("Testing dim: " + dimensions);
         // ------------------------
         // SEQUENTIAL
         long sequentialTotal = 0; // Total time elapsed
@@ -86,24 +88,26 @@ public class MetricGathering {
 
         // ------------------------
         // PRIORITY QUEUEUEUEUE
-        long pqTotal = 0; // Total time for priority queue
-        for (int i = 0; i < numTimesToTest; i++) {
-            maze = new Maze(dimensions); // generate new maze
-            pqStar = new ParallelPriorityQueue(numThreads); //generate new priority queue A Star instance
-            long pqStart = System.nanoTime(); // record start time
-            Node res = pqStar.run(maze); // run the parallel concurrent priority queue program and get the result
-            long pqEnd = System.nanoTime(); // record ending time
-            pqTotal += pqEnd - pqStart; // calculate duration and add to total time
+        long pqTimePer;
+        for (int numThreads = 1; numThreads <= 8; numThreads *= 2) {
+            long pqTotal = 0; // Total time for priority queue
+            for (int i = 0; i < numTimesToTest; i++) {
+                maze = new Maze(dimensions); // generate new maze
+                pqStar = new ParallelPriorityQueue(numThreads); //generate new priority queue A Star instance
+                long pqStart = System.nanoTime(); // record start time
+                Node res = pqStar.run(maze); // run the parallel concurrent priority queue program and get the result
+                long pqEnd = System.nanoTime(); // record ending time
+                pqTotal += pqEnd - pqStart; // calculate duration and add to total time
+            }
+            pqTimePer = pqTotal / numTimesToTest; // calculate time per run
+            // Calculate speedup = sequential / parallel time
+            System.out.println("Timing parallel = " + pqTimePer + " for " + numThreads + " threads");
+            System.out.println("Calculating pq = " + (double) sequentialTimePer / pqTimePer);
         }
-        long pqTimePer = pqTotal / numTimesToTest; // calculate time per run
-
-        System.out.println("Timing parallel = " + pqTimePer);
 
 
-        System.out.println("Calculating");
         // Calculate speedup = sequential / parallel time
-        System.out.println("pq = " + (double) sequentialTimePer / pqTimePer);
-        System.out.println("bi = " + (double) sequentialTimePer / bidirectionalTimePer);
+        System.out.println("Calculating bi = " + (double) sequentialTimePer / bidirectionalTimePer);
 
         System.out.println("\n\n");
 
