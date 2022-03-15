@@ -1,45 +1,44 @@
+/**
+ * @author Anh Tran, Peter Loyd, Ulysses Lin
+ * @date 3/14/2022
+ * @see "Seattle University, CPSC5600, Winter 2022"
+ * @class Display.java
+ * 
+ * Utilities for displaying A Star path information to the console and graphically.
+ */
+
 import edu.princeton.cs.algs4.StdDraw;
-import edu.princeton.cs.algs4.StdRandom;
 
 import java.awt.*;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 public class Display {
     private int dim;
-    private String[][] consoleGrid;
+    private String[][] consoleGrid; // visual grid printed to console
 
+    /**
+     * Constructs Display.
+     *
+     * @param dim maze dimension
+     */
     public Display (int dim) {
         this.dim = dim;
         consoleGrid = new String[dim][dim];
     }
 
     /**
-     * Prints path to console
+     * Prints 2D maze path to console.
      * 
      * @param target final Node
      */
-    public void print(Node target) {
+    public void printMazePath(Node target) {
         System.out.println("\n");
-
-        Node n = target;
-        if(n==null)
-            System.out.println("Something went wrong");
-
-        List<Point> path = new ArrayList<>();
-
-        while(n.parent != null){
-            path.add(n.getCoordinates());
-            n = n.parent;
-        }
-
-        path.add(n.getCoordinates());
-        Collections.reverse(path);
+        ArrayList<Node> path = definePath(target);
 
         for(int l = 0; l < path.size(); l++) {
-            Point curr = path.get(l), next;
+            Node curr = path.get(l), next;
             String toUse = "*";
 
             if (l == 0) {
@@ -81,22 +80,14 @@ public class Display {
         System.out.println("\n");
     }
 
-    public String getPath(Node target){
+    /**
+     * Prints path as list of coordinates to console.
+     * 
+     * @param target final Node
+     */
+    public void printPathAsList(Node target){
         StringBuilder str = new StringBuilder();
-
-        Node n = target;
-        if(n==null)
-            return "Something went wrong";
-
-        List<Point> path = new ArrayList<>();
-
-        while(n.parent != null){
-            path.add(n.getCoordinates());
-            n = n.parent;
-        }
-
-        path.add(n.getCoordinates());
-        Collections.reverse(path);
+        ArrayList<Node> path = definePath(target);
 
         for(int l = 0; l < path.size(); l++) {
             if (l == 0) {
@@ -105,9 +96,12 @@ public class Display {
             str.append("[" + path.get(l).x + "][" + path.get(l).y + "]" + (l == path.size() - 1 ? " (End)" : "-->"));
         }
 
-        return str.toString();
+        System.out.println(str.toString());
     }
 
+    /**
+     * @return shortest path length
+     */
     public int getShortestPathLength(Node target) {
         Node n = target;
         int count = 0;
@@ -123,19 +117,11 @@ public class Display {
         return count;
     }
 
+    /**
+     * Graphically animates the shortest path in the maze.
+     */
     public void animateShortestPath(Node target, Color c, double size) {
-        Node n = target;
-        List<Node> path = new ArrayList<>();
-
-        if (n == null)
-            System.out.println("Something went wrong");
-
-        while (n.parent != null) {
-            path.add(n);
-            n = n.parent;
-        }
-        path.add(n);
-        Collections.reverse(path);
+        ArrayList<Node> path = definePath(target);
 
         for (Node curr : path) {
             StdDraw.setPenColor(c);
@@ -143,10 +129,12 @@ public class Display {
             StdDraw.show();
             StdDraw.pause(30);
         }
-
     }
 
-    public ArrayList<Node> getShortestPathList(Node target) {
+    /**
+     * @return ArrayList of path Nodes in order from start to target
+     */
+    private ArrayList<Node> definePath(Node target) {
         Node n = target;
         ArrayList<Node> path = new ArrayList<>();
 
@@ -159,10 +147,6 @@ public class Display {
         }
         path.add(n);
         Collections.reverse(path);
-        for (Node m : path) {
-            System.out.print("[" + m.x + "][" + m.y + "] ");
-        }
-        System.out.println("\n");
-        return (ArrayList<Node>) path.clone();
+        return path;
     }
 }
