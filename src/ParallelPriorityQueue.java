@@ -64,10 +64,8 @@ public class ParallelPriorityQueue {
         }
 
         // make sure no threads are blocking while waiting for an empty queue
-        System.out.println("Before interrupt");
         for (Thread t : pqArray)
             t.interrupt();
-        System.out.println("After interrupt");
         // make sure all threads are done
         try {
             for (Thread t : pqArray)
