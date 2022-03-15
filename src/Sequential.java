@@ -19,13 +19,13 @@ import java.util.PriorityQueue;
 public class Sequential {
     private Node start;     // the node we're starting at
     private Node target;    // the node we're searching for
-    private Test_Maze maze;      // the maze we poll for graph information
+    private Maze maze;      // the maze we poll for graph information
 
     /**
      * Constructor sets up the nature of the problem.
      * @param maze The object that will be polled for graph information.
      */
-    public Sequential(Test_Maze maze) {
+    public Sequential(Maze maze) {
         this.maze = maze;
         this.start = maze.getStart();
         this.target = maze.getTarget();
