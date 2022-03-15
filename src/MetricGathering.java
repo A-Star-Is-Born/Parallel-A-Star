@@ -17,21 +17,19 @@ public class MetricGathering {
      */
     public static void main(String[] args) {
         // Generate the metrics we used for our report
-        // To run this test comment out all maze display and animation code from all other drivers.
-
-        // Test with dimension of 20 x 20 for 1, 2, 4, 8 threads at 20 times each
-        for (int i = 1; i <= 8; i *= 2) {
-            testTimes(20, 20, i);
-        }
-        // Test with dimension of 200 x 200 for 1, 2, 4, 8 threads at 20 times each
-        for (int i = 1; i <= 8; i *= 2) {
-            testTimes(200, 20, i);
-        }
-        // Test with dimension of 500 x 500 for 1, 2, 4, 8 threads at 20 times each
-        for (int i = 1; i <= 8; i *= 2) {
-            testTimes(500, 20, i);
-        }
-
+        /**
+         * TODO: for anyone running this code
+         * This class doesn't work well with graphics, therefore you will want
+         * to comment out the following code in Maze.java:
+         *
+         * In the Maze.java constructor, comment out these:
+         * 57        StdDraw.setXscale(0, n+2);
+         * 58        StdDraw.setYscale(0, n+2);
+         *
+         * 73        draw();
+         */
+        
+        // Test with DIM of 20, 200, 500 at 20 times each (PQ for 1, 2, 4, 8 threads each)
         testTimes(20, 20);
         testTimes(200, 20);
         testTimes(500, 20);

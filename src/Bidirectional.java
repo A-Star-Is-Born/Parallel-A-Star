@@ -69,11 +69,11 @@ public class Bidirectional {
          */
         @Override
         public void run() {
-            System.out.println("Thread" + threadName + " start: [" + start.x + "][" + start.y + "]"); // state where the thread starts
+            // System.out.println("Thread" + threadName + " start: [" + start.x + "][" + start.y + "]"); // state where the thread starts
             Node current = null;
             while(!frontier[threadName].isEmpty()) {
                 if (Thread.interrupted()) {
-                    System.out.println("Thread" + threadName + " was interrupted.");
+                    // System.out.println("Thread" + threadName + " was interrupted.");
                     return;
                 }
                 current = frontier[threadName].peek();
@@ -89,8 +89,8 @@ public class Bidirectional {
                         }
                         Node c = current;
                         biDPathList[threadName] = c; // set final Node of this thread's path
-                        System.out.println("Meeting midway, with Thread" + threadName + " ending at: [" + c.x + "][" + c.y + 
-                            "] and Thread" + (1 - threadName) + " ending at: [" + neigh.x + "][" + neigh.y + "]");
+                        // System.out.println("Meeting midway, with Thread" + threadName + " ending at: [" + c.x + "][" + c.y +
+                        //    "] and Thread" + (1 - threadName) + " ending at: [" + neigh.x + "][" + neigh.y + "]");
                         biDPathList[1 - threadName] = neigh; // set final Node of the other's path to the neighbor that was seen
                         return;
                     }
@@ -151,7 +151,7 @@ public class Bidirectional {
         display.animateShortestPath(biD.biDPathList[1], Color.red, 0.15);
         int pathCount0 = display.getShortestPathLength(biD.biDPathList[0]);
         int pathCount1 = display.getShortestPathLength(biD.biDPathList[1]);
-        System.out.println("Bi-directional combined shortest path count: " + pathCount0 + " + " + pathCount1 + 
-            " + 1 (path connection) = " + (pathCount0 + pathCount1 + 1));
+        // System.out.println("Bi-directional combined shortest path count: " + pathCount0 + " + " + pathCount1 +
+        //    " + 1 (path connection) = " + (pathCount0 + pathCount1 + 1));
     }
 }
