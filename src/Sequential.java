@@ -8,6 +8,7 @@
  * Uses multiple threads to find a solution using the A* algorithm in parallel.
  */
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 
@@ -17,6 +18,7 @@ import java.util.PriorityQueue;
  * returns the target, which can be used to derive the path.
  */
 public class Sequential {
+    private static final int DIM = 20; // maze dimension
     private Node start;     // the node we're starting at
     private Node target;    // the node we're searching for
     private Maze maze;      // the maze we poll for graph information
@@ -97,4 +99,19 @@ public class Sequential {
         return null;
     }
 
+    public static void main(String[] args) {
+        Maze maze = new Maze(DIM);
+        Sequential aStar = new Sequential(maze);
+        Display display = new Display(DIM);
+
+        Node res = aStar.run();
+        
+        display.printPathAsList(res);
+        
+        display.printMazePath(res);
+        
+        System.out.println("Shortest path length: " + display.getShortestPathLength(res));
+        
+        display.animateShortestPath(res, Color.blue, 0.25);
+    }
 }
