@@ -66,7 +66,6 @@ public class ParallelPriorityQueue {
         // make sure no threads are blocking while waiting for an empty queue
         for (Thread t : pqArray)
             t.interrupt();
-
         // make sure all threads are done
         try {
             for (Thread t : pqArray)
