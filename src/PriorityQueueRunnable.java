@@ -75,7 +75,6 @@ public class PriorityQueueRunnable implements Runnable {
                     continue;
                 }
             } catch (InterruptedException e) {
-                System.out.println("Error when acquiring node" + e);
                 return;
             }
 
