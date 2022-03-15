@@ -1,3 +1,16 @@
+/**
+ * @author Anh Tran, Peter Loyd, Ulysses Lin
+ * @date 3/14/2022
+ * @see "Seattle University, CPSC5600, Winter 2022"
+ * @class Maze.java
+ * 
+ * Creates the graphical maze that A Star searches through.
+ * Mazes are square and have a start and end (SW and NE corners).
+ * There is a 1 cell border around the edges.
+ * 
+ * Most of code for maze creation was borrowed. See paper for reference.
+ */
+
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdRandom;
 
@@ -23,26 +36,27 @@ import static java.lang.Math.abs;
  ******************************************************************************/
 
 public class Maze {
-    private final int n;                 // dimension of maze
-    private boolean[][] north;     // is there a wall to north of cell i, j
+    private final int n; // dimension of maze
+    private boolean[][] north; // is there a wall to north of cell i, j
     private boolean[][] east;
     private boolean[][] south;
     private boolean[][] west;
-    private boolean[][] visited;
-    private final Node[][] nodeGrid;
-    private static final double RADIUS = 0.375;
+    private boolean[][] visited; // if the path has been to this cell before
+    private final Node[][] nodeGrid; // grid itself, no border included
+    private static final double RADIUS = 0.375; // start/end circle radius
+    private Node start; // start Node
+    private Node target; // end Node
 
-    private boolean done = false;
-
-    private Node start;
-    private Node target;
-
+    /**
+     * Constructor for Maze.
+     *
+     * @param n dimension
+     */
     public Maze(int n) {
         this.n = n;
         StdDraw.setXscale(0, n+2);
         StdDraw.setYscale(0, n+2);
         nodeGrid = new Node[n+2][n+2];
-
         Point targetPoint = new Point(n, n);
 
         for (int i = 1; i < n + 1; i++) {
@@ -59,9 +73,10 @@ public class Maze {
         draw();
     }
 
-
+    /**
+     * Initialize walls, and border cells as already visited.
+     */
     private void init() {
-        // initialize border cells as already visited
         visited = new boolean[n+2][n+2];
         for (int x = 0; x < n+2; x++) {
             visited[x][0] = true;
@@ -72,8 +87,6 @@ public class Maze {
             visited[n+1][y] = true;
         }
 
-
-        // initialize all walls as present
         north = new boolean[n+2][n+2];
         east  = new boolean[n+2][n+2];
         south = new boolean[n+2][n+2];
@@ -88,8 +101,12 @@ public class Maze {
         }
     }
 
-
-    // generate the maze
+    /**
+     * Creates the random corridors of the maze using recursion.
+     *
+     * @param x x-coordinate of previous cell
+     * @param y y-coordinate of previous cell
+     */
     private void generate(int x, int y) {
         visited[x][y] = true;
 
@@ -127,67 +144,19 @@ public class Maze {
         }
     }
 
-    // generate the maze starting from lower left
+    /**
+     * Generate maze from SW corner.
+     * This may be causing less/no forks at that corner while the end has forks;
+     * this could be causing thread 0 in bi-directional to have easy pathfinding.
+     */
     private void generate() {
         generate(1, 1);
-/*
-        // delete some random walls
-        for (int i = 0; i < n; i++) {
-            int x = 1 + StdRandom.uniform(n-1);
-            int y = 1 + StdRandom.uniform(n-1);
-            north[x][y] = south[x][y+1] = false;
-        }
-
-        // add some random walls
-        for (int i = 0; i < 10; i++) {
-            int x = n/2 + StdRandom.uniform(n/2);
-            int y = n/2 + StdRandom.uniform(n/2);
-            east[x][y] = west[x+1][y] = true;
-        }
-*/
     }
 
-    // solve the maze using depth-first search
-    // TODO: Delete this after we have a better understanding of how to use all this
-    private void solve(int x, int y) {
-
-        if (x == 0 || y == 0 || x == n+1 || y == n+1) return;
-        if (done || visited[x][y]) return;
-        visited[x][y] = true;
-
-        StdDraw.setPenColor(StdDraw.BLUE);
-        StdDraw.filledCircle(x + 0.5, y + 0.5, 0.25);
-        StdDraw.show();
-        StdDraw.pause(30);
-
-        // reached middle
-        // TODO: note that this does not go to our new target location
-        if (x == n/2 && y == n/2) done = true;
-
-        if (!north[x][y]) solve(x, y + 1);
-        if (!east[x][y])  solve(x + 1, y);
-        if (!south[x][y]) solve(x, y - 1);
-        if (!west[x][y])  solve(x - 1, y);
-
-        if (done) return;
-
-        StdDraw.setPenColor(StdDraw.GRAY);
-        StdDraw.filledCircle(x + 0.5, y + 0.5, 0.25);
-        StdDraw.show();
-        StdDraw.pause(30);
-    }
-
-    // solve the maze starting from the start state
-    public void solve() {
-        for (int x = 1; x <= n; x++)
-            for (int y = 1; y <= n; y++)
-                visited[x][y] = false;
-        done = false;
-        solve(1, 1);
-    }
-
-
-    // draw the maze
+    /**
+     * Draws the start and end circles.
+     * Draws maze walls.
+     */
     public void draw() {
         StdDraw.setPenColor(StdDraw.GREEN);
         StdDraw.filledCircle(1.5, 1.5, RADIUS);
@@ -207,20 +176,29 @@ public class Maze {
         StdDraw.pause(50);
     }
 
-    // public boolean notWall(boolean[][] arr, int x, int y) {return !(arr[x][y]);}
-
-
+    /**
+     * @return end Node
+     */
     public Node getTarget() {
         return target;
     }
 
+    /**
+     * @return start Node
+     */
     public Node getStart() {
         return start;
     }
 
+    /**
+     * Reports all the accessible neighboring Nodes of a given Node.
+     * 
+     * @param current Node to get neighbors of
+     * @return ArrayList of neighboring Nodes
+     */
     public ArrayList<Node> getNeighbors(Node current) {
-        int x = current.getX();
-        int y = current.getY();
+        int x = current.x;
+        int y = current.y;
         ArrayList<Node> retList = new ArrayList<>(4);
         if (!north[x][y])
             retList.add(nodeGrid[x][y + 1]);
@@ -233,22 +211,17 @@ public class Maze {
         return retList;
     }
 
+    /**
+     * Calculate remaining distance hueristically to end.
+     * 
+     * @param x current x
+     * @param y current y
+     * @param finish end Point
+     * @return heuristic distance to end
+     */
     public int getHeuristic(int x, int y, Point finish) {
-        // TODO: switch to double instead of int, surely?
         int theY = abs(y - finish.y);
         int theX = abs(x - finish.x);
         return theY + theX;
     }
-
-
-    // a test client
-    public static void main(String[] args) {
-        // int n = 8; // Integer.parseInt(args[0]);
-        Maze maze = new Maze(4);
-        StdDraw.enableDoubleBuffering();
-        maze.draw();
-        // maze.report(2, 2);
-        maze.solve();
-    }
-
 }

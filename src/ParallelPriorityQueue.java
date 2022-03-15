@@ -91,15 +91,14 @@ public class ParallelPriorityQueue {
         Display display = new Display(DIM);
         Maze maze = new Maze(DIM);
         Node res = parallelV1.run(maze);
-        String printable = "";
-        if (res != null)
-            printable = display.getPath(res);
-        System.out.println(printable);
-        display.print(res);
+
+        display.printPathAsList(res);
+        
+        display.printMazePath(res);
 
         System.out.println("Shortest path length: " + display.getShortestPathLength(res));
 
-        display.animateShortestPath(res, Color.magenta, .3);
+        display.animateShortestPath(res, Color.magenta, 0.3);
     }
 
 }
