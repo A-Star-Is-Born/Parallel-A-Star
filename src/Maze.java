@@ -54,8 +54,8 @@ public class Maze {
      */
     public Maze(int n) {
         this.n = n;
-        StdDraw.setXscale(0, n+2);
-        StdDraw.setYscale(0, n+2);
+        // StdDraw.setXscale(0, n+2);
+        // StdDraw.setYscale(0, n+2);
         nodeGrid = new Node[n+2][n+2];
         Point targetPoint = new Point(n, n);
 
@@ -70,7 +70,7 @@ public class Maze {
 
         init();
         generate();
-        draw();
+        // draw();
     }
 
     /**
