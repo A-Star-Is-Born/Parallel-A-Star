@@ -15,5 +15,13 @@ Open any of the following files and run their main methods individually. After a
 We prepared tests to time finding the shortest path using Sequential, ParallelPriorityQueue, and Bidirectional for three maze sizes (DIM = 20, 200, 500).
 Sequential and Bidirectional will do 20 tests per DIM, while ParallelPriorityQueue does 20 tests per thread count (1, 2, 4, 8) per DIM.
 
-Running metrics does not induce animation. To run the metrics, follow the following steps:
-// TODO
+Running metrics should be done without graphics. To do so comment out these three lines in the Maze.java constructor:
+
+#
+# 57        StdDraw.setXscale(0, n+2);
+# 58        StdDraw.setYscale(0, n+2);
+
+# {59 ... 72}
+
+# 73        draw();
+#
