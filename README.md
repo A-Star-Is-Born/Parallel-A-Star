@@ -3,6 +3,10 @@ A parallelized A* search, done for Seattle University's Parallel Computing class
 
 Collaborators: Anh Tran, Peter Loyd, Ulysses Lin
 
+NOTE: to run our files, you must have the algs4.jar file working. To do so in VSCode:
+In the left side of the window, expand JAVA PROJECTS. Look for Referenced Libraries. Click the "+". Select algs4.jar which we have included.
+You may also watch this YouTube tutorial on how to do so: https://www.youtube.com/watch?v=3Qm54znQX2E
+
 There are three A Star methods we explored: 1) Sequential, 2) ParallelPriorityQueue, and 3) Bidirectional - the last two being parallel.
 
 ## Running Animations of A Star Methods
@@ -20,8 +24,9 @@ Running metrics should be done without graphics. To do so comment out these thre
 #
 # 57        StdDraw.setXscale(0, n+2);
 # 58        StdDraw.setYscale(0, n+2);
-
-# {59 ... 72}
-
 # 73        draw();
 #
+
+Then run the main method in MetricGathering.java.
+
+NOTE: when you run MetricGathering.java, the 500 DIM tests take a very long time, perhaps more than 15 minutes.
