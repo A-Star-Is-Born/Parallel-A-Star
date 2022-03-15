@@ -42,7 +42,7 @@ public class MetricGathering {
      */
     public static void testTimes(int dimensions, int numTimesToTest, int numThreads) {
         Maze maze; // the maze to run the search
-        AStar aStar; // sequential A Star search
+        Sequential_AStar aStar; // sequential A Star search
         ParallelPriorityQueue pqStar; // Parallel A Star search using concurrent priority queue
         Bidirectional bidirectionalStar; // Parallel A Star search using bi-directional A-Star
 
@@ -53,7 +53,7 @@ public class MetricGathering {
         long sequentialTotal = 0; // Total time elapsed
         for (int i = 0; i < numTimesToTest; i++) {
             maze = new Maze(dimensions);  // create new maze
-            aStar = new AStar(maze); // create new A Star search instance
+            aStar = new Sequential_AStar(maze); // create new A Star search instance
             long timingStart = System.nanoTime(); // start time
             Node res = aStar.run(); // run sequential A Star
             long timingEnd = System.nanoTime(); // end time
@@ -72,8 +72,8 @@ public class MetricGathering {
             long timingStart = System.nanoTime(); // time start
             bidirectionalStar = new Bidirectional(maze); // create new bidirectional A Star search instance
             try {
-                bidirectionalStar.thread1.join(); // join thread 1
-                bidirectionalStar.thread2.join(); // join thread 2
+                bidirectionalStar.thread0.join(); // join thread 1
+                bidirectionalStar.thread1.join(); // join thread 2
             } catch (InterruptedException e) {
                 return;
             }

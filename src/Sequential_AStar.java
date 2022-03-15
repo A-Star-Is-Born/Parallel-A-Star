@@ -1,12 +1,14 @@
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 
-public class AStar {
+public class Sequential_AStar {
+    private static final int DIM = 20;
     private Node start;
     private Node target;
     private Maze maze;
 
-    public AStar(Maze maze) {
+    public Sequential_AStar(Maze maze) {
         this.maze = maze;
         this.start = maze.getStart();
         this.target = maze.getTarget();
@@ -85,5 +87,22 @@ public class AStar {
 
     }
 
+    /**
+     * Driver for running sequential A Star search.
+     */
+    public static void main(String[] args) {
+        Maze maze = new Maze(DIM);
+        Sequential_AStar aStar = new Sequential_AStar(maze);
+        Display display = new Display(DIM);
 
+        Node res = aStar.run();
+        
+        display.printPathAsList(res);
+        
+        display.printMazePath(res);
+        
+        System.out.println("Shortest path length: " + display.getShortestPathLength(res));
+        
+        display.animateShortestPath(res, Color.blue, 0.25);
+    }
 }

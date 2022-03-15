@@ -8,10 +8,12 @@
  * Two threads come from opposite ends of the maze and typically meet somewhere in the middle.
  */
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 
 public class Bidirectional {
+    private static final int DIM = 20; // maze dimension
     private Maze maze; // maze to solve
     public Thread thread0, thread1; // Threads
     public Node[] biDPathList; // path list taken by each thread
@@ -129,5 +131,27 @@ public class Bidirectional {
             }
             return;
         }
+    }
+
+    /**
+     * Driver for running bi-directional A Star search.
+     */
+    public static void main(String[] args) {
+        Maze maze = new Maze(DIM);
+        Bidirectional biD = new Bidirectional(maze);
+        Display display = new Display(DIM);
+        try {
+            biD.thread0.join();
+            biD.thread1.join();
+        } catch (InterruptedException e) {
+            return;
+        }
+        
+        display.animateShortestPath(biD.biDPathList[0], Color.green, 0.25);
+        display.animateShortestPath(biD.biDPathList[1], Color.red, 0.15);
+        int pathCount0 = display.getShortestPathLength(biD.biDPathList[0]);
+        int pathCount1 = display.getShortestPathLength(biD.biDPathList[1]);
+        System.out.println("Bi-directional combined shortest path count: " + pathCount0 + " + " + pathCount1 + 
+            " + 1 (path connection) = " + (pathCount0 + pathCount1 + 1));
     }
 }
